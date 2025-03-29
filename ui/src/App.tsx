@@ -10,7 +10,6 @@ function App() {
   const [quality, setQuality] = useState(75);
   const [lossless, setLossless] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [downloadReady, setDownloadReady] = useState(false);
@@ -60,7 +59,6 @@ function App() {
     }
 
     setIsConverting(true);
-    setProgress(0);
     setError(null);
 
     try {
@@ -105,7 +103,6 @@ function App() {
       }
     } finally {
       setIsConverting(false);
-      setProgress(0);
     }
   };
 
@@ -140,7 +137,6 @@ function App() {
             isConverting={isConverting}
             filesCount={files.length}
             onConvert={convertFiles}
-            progress={progress}
             error={error}
           />
 

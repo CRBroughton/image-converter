@@ -1,6 +1,5 @@
 import FormatSelector from './FormatSelector';
 import QualitySlider from './QualitySlider';
-import ProgressBar from './ProgressBar';
 
 interface ConversionOptionsProps {
   format: 'webp' | 'avif';
@@ -12,7 +11,6 @@ interface ConversionOptionsProps {
   isConverting: boolean;
   filesCount: number;
   onConvert: () => void;
-  progress: number;
   error: string | null;
 }
 
@@ -26,26 +24,22 @@ const ConversionOptions = ({
   isConverting,
   filesCount,
   onConvert,
-  progress,
   error
 }: ConversionOptionsProps) => {
   return (
     <div className="md:w-80 bg-white rounded-lg shadow p-4">
       <h2 className="text-lg font-semibold mb-4">Conversion Options</h2>
       
-      {/* Format selector */}
       <FormatSelector 
         format={format}
         setFormat={setFormat}
       />
       
-      {/* Quality slider */}
       <QualitySlider 
         quality={quality}
         setQuality={setQuality}
       />
       
-      {/* Lossless option */}
       <div className="mb-6">
         <label className="inline-flex items-center cursor-pointer">
           <input
@@ -63,7 +57,6 @@ const ConversionOptions = ({
         </p>
       </div>
       
-      {/* Convert button */}
       <button
         onClick={onConvert}
         disabled={isConverting || filesCount === 0}
@@ -77,12 +70,6 @@ const ConversionOptions = ({
         {isConverting ? 'Converting...' : 'Convert Images'}
       </button>
       
-      {/* Progress bar */}
-      {isConverting && (
-        <ProgressBar progress={progress} />
-      )}
-      
-      {/* Error message */}
       {error && (
         <div className="mt-4 p-2 bg-red-100 text-red-700 text-sm rounded">
           {error}
