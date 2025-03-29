@@ -1,5 +1,6 @@
 import FormatSelector from './FormatSelector';
 import QualitySlider from './QualitySlider';
+import SpeedSlider from './SpeedSlider';
 
 interface ConversionOptionsProps {
   format: 'webp' | 'avif';
@@ -11,7 +12,10 @@ interface ConversionOptionsProps {
   isConverting: boolean;
   filesCount: number;
   onConvert: () => void;
+  progress: number;
   error: string | null;
+  speed: number;
+  setSpeed?: (speed: number) => void;
 }
 
 const ConversionOptions = ({
@@ -24,7 +28,9 @@ const ConversionOptions = ({
   isConverting,
   filesCount,
   onConvert,
-  error
+  error,
+  setSpeed,
+  speed = 5,
 }: ConversionOptionsProps) => {
   return (
     <div className="md:w-80 bg-white rounded-lg shadow p-4">
@@ -32,13 +38,26 @@ const ConversionOptions = ({
       
       <FormatSelector 
         format={format}
-        setFormat={setFormat}
+        setFormat={(newFormat) => {
+          setFormat(newFormat);
+          if (newFormat === 'avif' && quality > 63) {
+            setQuality(63);
+          }
+        }}
       />
       
       <QualitySlider 
         quality={quality}
         setQuality={setQuality}
+        format={format}
       />
+
+      {format === 'avif' && setSpeed && (
+        <SpeedSlider 
+          speed={speed}
+          setSpeed={setSpeed}
+        />
+      )}
       
       <div className="mb-6">
         <label className="inline-flex items-center cursor-pointer">

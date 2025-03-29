@@ -29,6 +29,7 @@ import (
 
 type ConversionOptions struct {
 	Format   string  `json:"format"`
+	Speed    int     `json:"speed"`
 	Quality  float64 `json:"quality"`
 	Lossless bool    `json:"lossless"`
 }
@@ -177,7 +178,7 @@ func processUploadedFile(file io.Reader, outputPath string, options ConversionOp
 			return err
 		}
 	case "avif":
-		if err := avif.ConvertToAVIF(img, output, options.Quality, options.Lossless); err != nil {
+		if err := avif.ConvertToAVIF(img, output, options.Quality, options.Speed, options.Lossless); err != nil {
 			return err
 		}
 	}

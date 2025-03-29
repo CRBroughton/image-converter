@@ -8,8 +8,10 @@ function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [format, setFormat] = useState<'webp' | 'avif'>('webp');
   const [quality, setQuality] = useState(75);
+  const [speed, setSpeed] = useState(5);
   const [lossless, setLossless] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [downloadReady, setDownloadReady] = useState(false);
@@ -22,6 +24,7 @@ function App() {
   // Clear all files
   const clearFiles = () => {
     setFiles([]);
+    // Clear any existing download link when clearing files
     if (downloadUrl) {
       window.URL.revokeObjectURL(downloadUrl);
       setDownloadUrl(null);
@@ -29,6 +32,7 @@ function App() {
     }
   };
 
+  // Handle downloading the zip file
   const handleDownload = () => {
     if (!downloadUrl) return;
     
@@ -59,6 +63,7 @@ function App() {
     }
 
     setIsConverting(true);
+    setProgress(0);
     setError(null);
 
     try {
@@ -74,8 +79,14 @@ function App() {
       const options: ConversionSettings = {
         format,
         quality: parseFloat(quality.toString()),
-        lossless
+        lossless,
       };
+      
+      // Add speed parameter for AVIF format
+      if (format === 'avif') {
+        options.speed = speed;
+      }
+      
       formData.append('options', JSON.stringify(options));
 
       // Make API request
@@ -103,6 +114,7 @@ function App() {
       }
     } finally {
       setIsConverting(false);
+      setProgress(0);
     }
   };
 
@@ -135,8 +147,11 @@ function App() {
             lossless={lossless}
             setLossless={setLossless}
             isConverting={isConverting}
+            speed={speed}
+            setSpeed={setSpeed}
             filesCount={files.length}
             onConvert={convertFiles}
+            progress={progress}
             error={error}
           />
 
