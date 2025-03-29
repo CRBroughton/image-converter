@@ -177,7 +177,7 @@ func processUploadedFile(file io.Reader, outputPath string, options ConversionOp
 			return err
 		}
 	case "avif":
-		if err := avif.ConvertToAVIF(img, output, options.Quality, options.Speed, options.Lossless); err != nil {
+		if err := avif.ConvertToAVIF(img, output, options.Quality, options.Speed); err != nil {
 			return err
 		}
 	}

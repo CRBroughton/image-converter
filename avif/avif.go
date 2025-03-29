@@ -11,12 +11,12 @@ import (
 	"github.com/Kagami/go-avif"
 )
 
-func ConvertToAVIF(img image.Image, output *os.File, quality float64, speed int, lossless bool) error {
+func ConvertToAVIF(img image.Image, output *os.File, quality float64, speed int) error {
 	startTime := time.Now()
 	fileName := filepath.Base(output.Name())
 
 	log.Printf("Starting AVIF conversion for %s", fileName)
-	log.Printf("Conversion parameters: quality=%d, speed=%d, lossless=%t", int(quality), speed, lossless)
+	log.Printf("Conversion parameters: quality=%d, speed=%d,", int(quality), speed)
 
 	width, height := getImageDimensions(img)
 	log.Printf("Image dimensions: %dx%d pixels", width, height)

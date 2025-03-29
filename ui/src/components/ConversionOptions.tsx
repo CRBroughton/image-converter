@@ -36,7 +36,7 @@ const ConversionOptions = ({
   return (
     <div className="md:w-80 bg-white rounded-lg shadow p-4">
       <h2 className="text-lg font-semibold mb-4">Conversion Options</h2>
-      
+
       <FormatSelector
         format={format}
         setFormat={(newFormat) => {
@@ -46,7 +46,7 @@ const ConversionOptions = ({
           }
         }}
       />
-      
+
       {format === 'avif' && setSpeed && (
         <QualityPresetDropdown
           format={format}
@@ -54,37 +54,38 @@ const ConversionOptions = ({
           setSpeed={setSpeed}
         />
       )}
-      
+
       <QualitySlider
         quality={quality}
         setQuality={setQuality}
         format={format}
       />
-      
+
       {format === 'avif' && setSpeed && (
         <SpeedSlider
           speed={speed}
           setSpeed={setSpeed}
         />
       )}
-      
-      <div className="mb-6">
-        <label className="inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            className="form-checkbox text-blue-600"
-            checked={lossless}
-            onChange={(e) => setLossless(e.target.checked)}
-          />
-          <span className="ml-2 text-gray-700 text-sm font-medium">
-            Lossless compression
-          </span>
-        </label>
-        <p className="text-xs text-gray-500 mt-1 ml-6">
-          Better quality but larger file size
-        </p>
-      </div>
-      
+
+      {format === 'webp' && (
+        <div className="mb-6">
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="form-checkbox text-blue-600"
+              checked={lossless}
+              onChange={(e) => setLossless(e.target.checked)}
+            />
+            <span className="ml-2 text-gray-700 text-sm font-medium">
+              Lossless compression
+            </span>
+          </label>
+          <p className="text-xs text-gray-500 mt-1 ml-6">
+            Better quality but larger file size
+          </p>
+        </div>
+      )}
       <button
         onClick={onConvert}
         disabled={isConverting || filesCount === 0}
@@ -97,7 +98,7 @@ const ConversionOptions = ({
       >
         {isConverting ? 'Converting...' : 'Convert Images'}
       </button>
-      
+
       {error && (
         <div className="mt-4 p-2 bg-red-100 text-red-700 text-sm rounded">
           {error}
