@@ -20,6 +20,10 @@ RUN go get github.com/rs/cors
 
 COPY *.go ./
 
+COPY webp/ ./webp/
+COPY utils/ ./utils/
+COPY avif/ ./avif/
+
 RUN go build -o image-converter .
 
 EXPOSE 8080
