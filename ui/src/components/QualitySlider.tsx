@@ -6,9 +6,9 @@ interface QualitySliderProps {
 
 const QualitySlider = ({ quality, setQuality, format }: QualitySliderProps) => {
   const maxQuality = format === 'avif' ? 63 : 100;
-  
-  const qualityLabel = format === 'avif' 
-    ? `${quality}` 
+
+  const qualityLabel = format === 'avif'
+    ? `${quality}`
     : `${quality}%`;
 
   const handleQualityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,15 +28,25 @@ const QualitySlider = ({ quality, setQuality, format }: QualitySliderProps) => {
       </div>
       <input
         type="range"
-        min="0"
+        min="1"
         max={maxQuality}
         value={quality}
         onChange={handleQualityChange}
         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
       />
       <div className="flex justify-between text-xs text-gray-500 mt-1">
-        <span>Lower size</span>
-        <span>Better quality</span>
+        {format === 'avif' && (
+          <>
+            <span>Better quality</span>
+            <span>Lower size</span>
+          </>
+        )}
+        {format === 'webp' && (
+          <>
+            <span>Lower size</span>
+            <span>Better quality</span>
+          </>
+        )}
       </div>
       {format === 'avif' && (
         <p className="text-xs text-gray-500 mt-1">

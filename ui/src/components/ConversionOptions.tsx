@@ -1,6 +1,7 @@
 import FormatSelector from './FormatSelector';
 import QualitySlider from './QualitySlider';
 import SpeedSlider from './SpeedSlider';
+import QualityPresetDropdown from './QualityPresetDropdown';
 
 interface ConversionOptionsProps {
   format: 'webp' | 'avif';
@@ -36,7 +37,7 @@ const ConversionOptions = ({
     <div className="md:w-80 bg-white rounded-lg shadow p-4">
       <h2 className="text-lg font-semibold mb-4">Conversion Options</h2>
       
-      <FormatSelector 
+      <FormatSelector
         format={format}
         setFormat={(newFormat) => {
           setFormat(newFormat);
@@ -46,14 +47,22 @@ const ConversionOptions = ({
         }}
       />
       
-      <QualitySlider 
+      {format === 'avif' && setSpeed && (
+        <QualityPresetDropdown
+          format={format}
+          setQuality={setQuality}
+          setSpeed={setSpeed}
+        />
+      )}
+      
+      <QualitySlider
         quality={quality}
         setQuality={setQuality}
         format={format}
       />
-
+      
       {format === 'avif' && setSpeed && (
-        <SpeedSlider 
+        <SpeedSlider
           speed={speed}
           setSpeed={setSpeed}
         />

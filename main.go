@@ -18,7 +18,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/crbroughton/image-converter/avif"
 	"github.com/crbroughton/image-converter/utils"
@@ -50,8 +49,8 @@ func main() {
 	srv := &http.Server{
 		Handler:      c.Handler(r),
 		Addr:         "0.0.0.0:8080",
-		WriteTimeout: 300 * time.Second, // Long timeout for processing multiple images
-		ReadTimeout:  300 * time.Second,
+		WriteTimeout: 0,
+		ReadTimeout:  0,
 	}
 
 	log.Println("Server starting on port 8080...")
