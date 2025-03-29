@@ -12,19 +12,51 @@ function App() {
   const [isConverting, setIsConverting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [downloadReady, setDownloadReady] = useState(false);
 
+  // Remove a file from the list
   const removeFile = (index: number) => {
     setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
   };
+
   // Clear all files
   const clearFiles = () => {
     setFiles([]);
+    if (downloadUrl) {
+      window.URL.revokeObjectURL(downloadUrl);
+      setDownloadUrl(null);
+      setDownloadReady(false);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!downloadUrl) return;
+    
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = `converted_images.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    // Clean up the URL and reset download state
+    window.URL.revokeObjectURL(downloadUrl);
+    setDownloadUrl(null);
+    setDownloadReady(false);
   };
 
   const convertFiles = async () => {
     if (files.length === 0) {
       setError('Please add at least one image to convert');
       return;
+    }
+
+    // Clear any existing download URL
+    if (downloadUrl) {
+      window.URL.revokeObjectURL(downloadUrl);
+      setDownloadUrl(null);
+      setDownloadReady(false);
     }
 
     setIsConverting(true);
@@ -34,7 +66,7 @@ function App() {
     try {
       // Create form data
       const formData = new FormData();
-
+      
       // Add files to form data
       files.forEach(file => {
         formData.append('files', file);
@@ -59,16 +91,11 @@ function App() {
         throw new Error(errorText || `Server returned ${response.status}`);
       }
 
-      // Create a download link for the zip file
+      // Create a URL for the zip file instead of automatically downloading
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `converted_images.zip`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      setDownloadUrl(url);
+      setDownloadReady(true);
 
     } catch (err) {
       if (err instanceof Error) {
@@ -93,28 +120,50 @@ function App() {
         {/* Left panel - Upload and file list */}
         <div className="flex-1 flex flex-col">
           <FileUploader onFilesAdded={files => setFiles(prev => [...prev, ...files])} />
-
-          <FileList
-            files={files}
-            onRemoveFile={removeFile}
-            onClearFiles={clearFiles}
+          
+          <FileList 
+            files={files} 
+            onRemoveFile={removeFile} 
+            onClearFiles={clearFiles} 
           />
         </div>
 
         {/* Right panel - Conversion options */}
-        <ConversionOptions
-          format={format}
-          setFormat={setFormat}
-          quality={quality}
-          setQuality={setQuality}
-          lossless={lossless}
-          setLossless={setLossless}
-          isConverting={isConverting}
-          filesCount={files.length}
-          onConvert={convertFiles}
-          progress={progress}
-          error={error}
-        />
+        <div className="md:w-80 flex flex-col">
+          <ConversionOptions
+            format={format}
+            setFormat={setFormat}
+            quality={quality}
+            setQuality={setQuality}
+            lossless={lossless}
+            setLossless={setLossless}
+            isConverting={isConverting}
+            filesCount={files.length}
+            onConvert={convertFiles}
+            progress={progress}
+            error={error}
+          />
+
+          {/* Download section */}
+          {downloadReady && downloadUrl && (
+            <div className="mt-4 bg-white rounded-lg shadow p-4">
+              <h2 className="text-lg font-semibold mb-2 text-green-700">Conversion Complete!</h2>
+              <p className="text-sm text-gray-600 mb-3">
+                Your images have been converted successfully. Click the button below to download them as a ZIP file.
+              </p>
+              <button
+                onClick={handleDownload}
+                className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+                type="button"
+              >
+                Download ZIP
+              </button>
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                The download link will be removed after downloading
+              </p>
+            </div>
+          )}
+        </div>
       </main>
 
       <footer className="mt-8 text-center text-gray-500 text-sm">
