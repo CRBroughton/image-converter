@@ -6,7 +6,7 @@ import (
 )
 
 // Removes potentially bad chars from file names
-func SanitizeFilename(filename string) string {
+func SanitiseFilename(filename string) string {
 	filename = filepath.Base(filename)
 	replacer := strings.NewReplacer(
 		"/", "_",
