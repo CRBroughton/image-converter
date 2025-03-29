@@ -1,5 +1,5 @@
 # Build stage using Bun
-FROM oven/bun:latest as build
+FROM oven/bun:latest AS build
 
 WORKDIR /app
 
